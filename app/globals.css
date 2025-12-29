@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #121412;
+    color: #F0F0F0;
+  }
+  
+  body {
+    background-color: #121412;
+    color: #F0F0F0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Custom Scrollbar */
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thumb-\[#1E211E\]\/50::-webkit-scrollbar-thumb {
+    background: rgba(30, 33, 30, 0.5);
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thumb-\[#1E211E\]\/50::-webkit-scrollbar-thumb:hover {
+    background: rgba(30, 33, 30, 0.7);
+  }
+  
+  .scrollbar-track-transparent::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+
