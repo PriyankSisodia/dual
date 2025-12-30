@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
+// Use Node.js runtime for Supabase operations
+export const runtime = 'nodejs'
+
 // POST /api/sides - Complete a dual by adding the missing side
 export async function POST(request: NextRequest) {
   try {

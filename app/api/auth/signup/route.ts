@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { createClient } from '@supabase/supabase-js'
 
+// Use Node.js runtime for Supabase operations
+export const runtime = 'nodejs'
+
 // POST /api/auth/signup - Create a new user
 export async function POST(request: NextRequest) {
   try {

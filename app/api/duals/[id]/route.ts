@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
+// Use Node.js runtime for Supabase operations
+export const runtime = 'nodejs'
+
 // GET /api/duals/[id] - Get a single dual
 export async function GET(
   request: NextRequest,

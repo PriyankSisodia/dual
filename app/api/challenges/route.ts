@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
+// Use Node.js runtime for Supabase operations
+export const runtime = 'nodejs'
+
 // POST /api/challenges - Create a challenge
 export async function POST(request: NextRequest) {
   try {

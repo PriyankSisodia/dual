@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
+// Use Node.js runtime for Supabase operations
+export const runtime = 'nodejs'
+
 // GET /api/auth/check - Check if user is authenticated
 export async function GET(request: NextRequest) {
   try {
