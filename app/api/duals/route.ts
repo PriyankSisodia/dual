@@ -21,11 +21,11 @@ export async function GET(request: NextRequest) {
         *,
         left_side:sides!duals_left_side_id_fkey(
           *,
-          author:profiles!sides_author_id_fkey(id, username, full_name, avatar_url)
+          author:profiles!sides_author_id_fkey(id, username, full_name, avatar_url, cred)
         ),
         right_side:sides!duals_right_side_id_fkey(
           *,
-          author:profiles!sides_author_id_fkey(id, username, full_name, avatar_url)
+          author:profiles!sides_author_id_fkey(id, username, full_name, avatar_url, cred)
         ),
         creator:profiles!duals_created_by_fkey(id, username, full_name, avatar_url),
         comments:comments(
@@ -42,9 +42,29 @@ export async function GET(request: NextRequest) {
         .not('right_side_id', 'is', null)
     }
 
-    // Filter by topic
+    // Filter by topic (can be topic slug or topic name)
     if (topic) {
-      query = query.ilike('topic', `%${topic}%`)
+      // First try to find by topic_id if it's a UUID
+      const topicIdMatch = topic.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+      if (topicIdMatch) {
+        query = query.eq('topic_id', topic)
+      } else {
+        // If topic is not a UUID, first find the topic by slug or name
+        // Then filter duals by that topic_id
+        const { data: topicData, error: topicError } = await supabase
+          .from('topics')
+          .select('id')
+          .or(`slug.ilike.%${topic}%,name.ilike.%${topic}%`)
+          .limit(1)
+          .maybeSingle()
+        
+        if (topicData && !topicError) {
+          query = query.eq('topic_id', topicData.id)
+        } else {
+          // Fallback: search by topic text field (for backwards compatibility)
+          query = query.ilike('topic', `%${topic}%`)
+        }
+      }
     }
 
     // Sort

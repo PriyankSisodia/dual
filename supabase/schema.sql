@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   full_name TEXT,
   avatar_url TEXT,
   bio TEXT,
-  persuasion_score INTEGER DEFAULT 0,
+  cred INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS public.sides (
   content TEXT NOT NULL CHECK (char_length(content) <= 400),
   author_id UUID REFERENCES public.profiles(id) NOT NULL,
   votes INTEGER DEFAULT 0,
-  persuasion_points INTEGER DEFAULT 0,
+  upvotes INTEGER DEFAULT 0,
   changed_mind_count INTEGER DEFAULT 0,
   challenge_count INTEGER DEFAULT 0,
   comment_count INTEGER DEFAULT 0,
@@ -267,12 +267,12 @@ BEGIN
   IF NEW.changed_mind = true AND (OLD IS NULL OR OLD.changed_mind = false) THEN
     UPDATE public.sides 
     SET changed_mind_count = changed_mind_count + 1,
-        persuasion_points = persuasion_points + 10
+        upvotes = upvotes + 10
     WHERE id = NEW.side_id;
     
-    -- Also update author's persuasion score
+    -- Also update author's cred
     UPDATE public.profiles
-    SET persuasion_score = persuasion_score + 10
+    SET cred = cred + 10
     WHERE id = (SELECT author_id FROM public.sides WHERE id = NEW.side_id);
   END IF;
   RETURN NEW;

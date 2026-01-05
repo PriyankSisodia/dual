@@ -4,11 +4,11 @@ import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import FeedTabs, { FeedSort } from '@/components/FeedTabs'
+import Sidebar from '@/components/Sidebar'
 import DualCard from '@/components/DualCard'
 import { DualSide, Comment } from '@/components/DualCard/types'
 import { Notification } from '@/components/Notifications'
 import CreateDualModal from '@/components/CreateDual'
-import ActivityFeed, { Activity } from '@/components/ActivityFeed'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { fetchDuals, createDual } from '@/lib/api/duals'
 import { createVote, deleteVote } from '@/lib/api/votes'
@@ -21,11 +21,11 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [hasMore, setHasMore] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const [activities, setActivities] = useState<Activity[]>([])
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
 
   // Check authentication first
   useEffect(() => {
@@ -36,9 +36,9 @@ export default function Home() {
   useEffect(() => {
     if (!authLoading && currentUser) {
       loadDuals()
-      loadActivities()
+      loadNotifications()
     }
-  }, [activeTab, authLoading, currentUser])
+  }, [activeTab, authLoading, currentUser, selectedTopic])
 
   const checkAuth = async () => {
     try {
@@ -79,6 +79,7 @@ export default function Home() {
         sort: activeTab,
         limit: 20,
         offset: 0,
+        topic: selectedTopic || undefined,
       })
 
       if (error) {
@@ -115,15 +116,30 @@ export default function Home() {
     }
   }
 
+  // Helper function to get cred title (same as Profile component)
+  const getCredTitle = (cred: number): { title: string; color: string } => {
+    if (cred >= 5000) return { title: 'Philosopher', color: '#9B59B6' }
+    if (cred >= 2500) return { title: 'Master Debater', color: '#3498DB' }
+    if (cred >= 1000) return { title: 'Debater', color: '#2ECC71' }
+    if (cred >= 500) return { title: 'Thinker', color: '#F39C12' }
+    if (cred >= 100) return { title: 'Skeptic', color: '#E67E22' }
+    return { title: 'Novice', color: '#95A5A6' }
+  }
+
   const transformSide = (side: any): DualSide => {
+    const authorCred = side.author?.cred || 0
+    const { title } = getCredTitle(authorCred)
+    
     return {
       id: side.id,
       content: side.content,
       author: side.author?.full_name || side.author?.username || 'Unknown',
       authorId: side.author_id,
       avatar: side.author?.avatar_url,
+      authorCred,
+      authorTitle: title,
       votes: side.votes || 0,
-      persuasionPoints: side.persuasion_points || 0,
+      upvotes: side.upvotes || 0,
       changedMindCount: side.changed_mind_count || 0,
       challengeCount: side.challenge_count || 0,
       commentCount: side.comment_count || 0,
@@ -131,24 +147,58 @@ export default function Home() {
     }
   }
 
-  const loadActivities = async () => {
+  const loadNotifications = async () => {
     try {
-      const response = await fetch('/api/activities?limit=5', {
-        credentials: 'include',
-      })
-      const { data, error } = await response.json()
-      if (!error && data) {
-        setActivities(data.map((a: any) => ({
-          id: a.id,
-          type: a.type,
+      // Load both notifications and activities, merge them
+      const [notificationsRes, activitiesRes] = await Promise.all([
+        fetch('/api/notifications', {
+          credentials: 'include',
+        }),
+        fetch('/api/activities?limit=10', {
+          credentials: 'include',
+        }),
+      ])
+
+      const notificationsData = await notificationsRes.json()
+      const activitiesData = await activitiesRes.json()
+
+      // Transform notifications
+      const notificationsList: Notification[] = []
+      
+      if (notificationsData.data) {
+        notificationsList.push(...notificationsData.data.map((n: any) => ({
+          id: n.id,
+          type: n.type as Notification['type'],
+          message: n.message,
+          userId: n.user_id,
+          userName: n.user?.username || n.user?.full_name,
+          dualId: n.dual_id,
+          timestamp: new Date(n.created_at),
+          read: n.read || false,
+        })))
+      }
+
+      // Transform activities and add them as notifications
+      if (activitiesData.data) {
+        notificationsList.push(...activitiesData.data.map((a: any) => ({
+          id: `activity-${a.id}`,
+          type: (a.type === 'vote' ? 'vote' : a.type === 'comment' ? 'comment' : a.type === 'new_dual' ? 'new_dual' : 'challenge') as Notification['type'],
           message: a.message,
           userId: a.user_id,
           userName: a.user?.username || a.user?.full_name,
+          dualId: a.dual_id,
           timestamp: new Date(a.created_at),
+          read: false,
         })))
       }
+
+      // Sort by timestamp (newest first) and set
+      const allNotifications = notificationsList.sort(
+        (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
+      )
+      setNotifications(allNotifications)
     } catch (err) {
-      console.error('Error loading activities:', err)
+      console.error('Error loading notifications:', err)
     }
   }
 
@@ -240,6 +290,7 @@ export default function Home() {
   const handleVote = async (dualId: string, side: 'left' | 'right' | 'neutral') => {
     if (!currentUser) {
       alert('Please sign in to vote')
+      router.push('/login')
       return
     }
 
@@ -260,14 +311,49 @@ export default function Home() {
 
       if (error) {
         console.error('Vote error:', error)
-        alert('Failed to vote: ' + error)
+        if (error.includes('Unauthorized') || error.includes('sign in') || error.includes('session')) {
+          // Session expired or invalid - check client-side session
+          const supabase = createSupabaseClient()
+          const { data: { session: clientSession }, error: sessionError } = await supabase.auth.getSession()
+          const { data: { user }, error: userError } = await supabase.auth.getUser()
+          
+          if (sessionError || !clientSession || userError || !user) {
+            // Client-side session is also invalid - definitely need to re-login
+            alert('Your session has expired. Please sign in again.')
+            router.push('/login')
+            router.refresh()
+          } else {
+            // Client has valid session but server doesn't - cookie sync issue
+            // Try to refresh the session to sync cookies
+            try {
+              await supabase.auth.refreshSession()
+              // Retry the vote after refresh
+              const retryResult = await createVote({
+                dualId,
+                sideId: sideId || '',
+                voteType: side,
+                changedMind: false,
+              })
+              
+              if (retryResult.error) {
+                alert('Session sync issue. Please sign out and sign back in, then try again.')
+              } else {
+                loadDuals()
+              }
+            } catch (refreshError) {
+              alert('Session issue detected. Please sign out and sign back in, then try voting again.')
+            }
+          }
+        } else {
+          alert('Failed to vote: ' + error)
+        }
       } else {
         // Reload duals to get updated vote counts
         loadDuals()
       }
     } catch (err: any) {
       console.error('Vote error:', err)
-      alert('Failed to vote: ' + err.message)
+      alert('Failed to vote: ' + (err.message || 'Unknown error'))
     }
   }
 
@@ -295,7 +381,7 @@ export default function Home() {
         console.error('Change mind error:', error)
       } else {
         loadDuals()
-        loadActivities()
+        loadNotifications()
       }
     } catch (err: any) {
       console.error('Change mind error:', err)
@@ -388,7 +474,7 @@ export default function Home() {
       } else {
         setShowCreateModal(false)
         loadDuals()
-        loadActivities()
+        loadNotifications()
       }
     } catch (err: any) {
       console.error('Create dual error:', err)
@@ -423,10 +509,10 @@ export default function Home() {
   // Show loading state while checking auth
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#121412] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F5F3FF] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#2ECC71] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#F0F0F0]/70">Loading...</p>
+          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     )
@@ -438,7 +524,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121412] text-[#F0F0F0]">
+    <div className="min-h-screen bg-[#F5F3FF] text-gray-900">
       <Header
         onSearch={handleSearch}
         currentUser={currentUser}
@@ -455,36 +541,44 @@ export default function Home() {
       />
       <FeedTabs activeTab={activeTab} onTabChange={setActiveTab} />
       
-      {/* Create Dual Button */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="w-full px-6 py-4 bg-[#1E211E] border-2 border-dashed border-[#2ECC71]/30 rounded-xl hover:border-[#2ECC71] hover:bg-[#1E211E]/80 transition-all flex items-center justify-center gap-3 group"
-        >
-          <svg
-            className="w-6 h-6 text-[#2ECC71] group-hover:scale-110 transition-transform"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          <span className="text-[#F0F0F0] font-medium">What's your take? Start a Dual</span>
-        </button>
-      </div>
+      {/* Main Content with Sidebar */}
+      <div className="flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 gap-6">
+        {/* Left Sidebar */}
+        <Sidebar 
+          activeTopic={selectedTopic || undefined}
+          onTopicSelect={setSelectedTopic}
+        />
+        
+        {/* Main Feed */}
+        <div className="flex-1 min-w-0">
+          {/* Create Dual Button */}
+          <div className="pt-6">
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="w-full px-6 py-4 bg-white border-2 border-dashed border-purple-300 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all flex items-center justify-center gap-3 group"
+            >
+              <svg
+                className="w-6 h-6 text-purple-600 group-hover:scale-110 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              <span className="text-gray-900 font-medium">What's your take? Start a Dual</span>
+            </button>
+          </div>
 
-      {/* Activity Feed */}
-      <ActivityFeed activities={activities} />
 
-      <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+          <main className="py-8">
         {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 bg-[#E67E22]/20 border border-[#E67E22]/50 rounded-lg text-[#E67E22]">
+          <div className="mb-6 p-4 bg-purple-100 border border-purple-300 rounded-lg text-purple-700">
             <p className="font-semibold">Error loading data</p>
             <p className="text-sm">{error}</p>
             <p className="text-xs mt-2">Make sure your Supabase credentials are set in .env.local</p>
@@ -494,7 +588,7 @@ export default function Home() {
         {/* Loading State */}
         {loading && displayedCards.length === 0 && (
           <div className="flex items-center justify-center py-12">
-            <div className="flex items-center gap-2 text-[#F0F0F0]/70">
+            <div className="flex items-center gap-2 text-gray-600">
               <svg
                 className="animate-spin h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -523,10 +617,10 @@ export default function Home() {
         {/* Dual Cards Feed */}
         {!loading && filteredCards.length === 0 && !error && (
           <div className="text-center py-12">
-            <p className="text-[#F0F0F0]/70 mb-4">No duals found. Be the first to start one!</p>
+            <p className="text-gray-600 mb-4">No duals found. Be the first to start one!</p>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-6 py-3 bg-[#2ECC71] text-white rounded-lg hover:bg-[#27AE60] transition-colors font-medium"
+              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
             >
               Create First Dual
             </button>
@@ -560,7 +654,7 @@ export default function Home() {
         {hasMore && (
           <div ref={loadMoreRef} className="py-8 text-center">
             {loading ? (
-              <div className="flex items-center justify-center gap-2 text-[#F0F0F0]/70">
+              <div className="flex items-center justify-center gap-2 text-gray-600">
                 <svg
                   className="animate-spin h-5 w-5"
                   xmlns="http://www.w3.org/2000/svg"
@@ -586,7 +680,7 @@ export default function Home() {
             ) : (
               <button
                 onClick={handleLoadMore}
-                className="px-6 py-3 bg-[#2ECC71] text-white rounded-lg hover:bg-[#27AE60] transition-colors font-medium shadow-lg hover:shadow-xl"
+                className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium shadow-lg hover:shadow-xl"
               >
                 Load More
               </button>
@@ -595,11 +689,13 @@ export default function Home() {
         )}
 
         {!hasMore && displayedCards.length > 0 && (
-          <div className="py-8 text-center text-[#F0F0F0]/70">
+          <div className="py-8 text-center text-gray-600">
             <p>You've reached the end of the feed!</p>
           </div>
         )}
-      </main>
+          </main>
+        </div>
+      </div>
 
       {/* Create Dual Modal */}
       <CreateDualModal

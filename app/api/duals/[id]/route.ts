@@ -19,11 +19,11 @@ export async function GET(
         *,
         left_side:sides!duals_left_side_id_fkey(
           *,
-          author:profiles!sides_author_id_fkey(id, username, full_name, avatar_url)
+          author:profiles!sides_author_id_fkey(id, username, full_name, avatar_url, cred)
         ),
         right_side:sides!duals_right_side_id_fkey(
           *,
-          author:profiles!sides_author_id_fkey(id, username, full_name, avatar_url)
+          author:profiles!sides_author_id_fkey(id, username, full_name, avatar_url, cred)
         ),
         creator:profiles!duals_created_by_fkey(id, username, full_name, avatar_url)
       `)

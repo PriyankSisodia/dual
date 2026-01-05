@@ -77,25 +77,25 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121412] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#F5F3FF] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#F0F0F0] mb-2">DUAL</h1>
-          <p className="text-[#F0F0F0]/70">Join the conversation. Start a debate.</p>
+          <h1 className="text-4xl font-bold text-purple-600 mb-2">DUAL</h1>
+          <p className="text-gray-600">Join the conversation. Start a debate.</p>
         </div>
 
         {/* Signup Form */}
-        <div className="bg-[#1E211E] rounded-xl p-8 border border-[#1E211E]/50 shadow-lg">
+        <div className="bg-white rounded-xl p-8 border border-purple-200 shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+              <label htmlFor="fullName" className="block text-sm font-medium text-gray-900 mb-2">
                 Full Name
               </label>
               <input
@@ -103,13 +103,13 @@ export default function SignupPage() {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-4 py-3 bg-[#121412] border border-[#1E211E]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#F0F0F0] placeholder-[#F0F0F0]/50"
+                className="w-full px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="John Doe"
               />
             </div>
 
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+              <label htmlFor="username" className="block text-sm font-medium text-gray-900 mb-2">
                 Username
               </label>
               <input
@@ -117,14 +117,14 @@ export default function SignupPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-[#121412] border border-[#1E211E]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#F0F0F0] placeholder-[#F0F0F0]/50"
+                className="w-full px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="johndoe"
               />
-              <p className="mt-1 text-xs text-[#F0F0F0]/50">Optional - will use email if not provided</p>
+              <p className="mt-1 text-xs text-gray-500">Optional - will use email if not provided</p>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
                 Email
               </label>
               <input
@@ -133,13 +133,13 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#121412] border border-[#1E211E]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#F0F0F0] placeholder-[#F0F0F0]/50"
+                className="w-full px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
                 Password
               </label>
               <input
@@ -149,16 +149,16 @@ export default function SignupPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full px-4 py-3 bg-[#121412] border border-[#1E211E]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#F0F0F0] placeholder-[#F0F0F0]/50"
+                className="w-full px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="••••••••"
               />
-              <p className="mt-1 text-xs text-[#F0F0F0]/50">Must be at least 6 characters</p>
+              <p className="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-3 bg-[#2ECC71] text-white rounded-lg hover:bg-[#27AE60] transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating account...' : 'Sign Up'}
             </button>
@@ -166,9 +166,9 @@ export default function SignupPage() {
 
           {/* Sign In Link */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-[#F0F0F0]/70">
+            <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <Link href="/login" className="text-[#2ECC71] hover:text-[#27AE60] font-medium">
+              <Link href="/login" className="text-purple-600 hover:text-purple-700 font-medium">
                 Sign in
               </Link>
             </p>

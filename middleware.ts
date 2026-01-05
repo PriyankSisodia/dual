@@ -30,7 +30,21 @@ export async function middleware(request: NextRequest) {
   })
 
   // Refresh session if expired - required for Server Components
-  await supabase.auth.getUser()
+  // This ensures session cookies are refreshed on every request
+  const { data: { session } } = await supabase.auth.getSession()
+  
+  // If session exists but is close to expiring, refresh it
+  if (session && session.expires_at) {
+    const expiresAt = session.expires_at * 1000 // Convert to milliseconds
+    const now = Date.now()
+    const timeUntilExpiry = expiresAt - now
+    const fiveMinutes = 5 * 60 * 1000
+    
+    // If session expires in less than 5 minutes, refresh it
+    if (timeUntilExpiry < fiveMinutes) {
+      await supabase.auth.refreshSession()
+    }
+  }
 
   return response
 }

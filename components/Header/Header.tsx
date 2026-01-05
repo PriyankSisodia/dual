@@ -31,12 +31,12 @@ export default function Header({
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-[#1E211E] border-b border-[#1E211E]/50 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white border-b border-purple-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-[#F0F0F0]">
+            <h1 className="text-2xl font-bold text-purple-600">
               DUAL
             </h1>
           </div>
@@ -49,10 +49,10 @@ export default function Header({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search topics: Tech, Politics, Food..."
-                className="w-full px-4 py-2 pl-10 pr-4 bg-[#121412] border border-[#1E211E]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#F0F0F0] placeholder-[#F0F0F0]/50"
+                className="w-full px-4 py-2 pl-10 pr-4 bg-purple-50 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
               />
               <svg
-                className="absolute left-3 top-2.5 h-5 w-5 text-[#F0F0F0]/50"
+                className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -79,22 +79,26 @@ export default function Header({
               <div className="flex items-center gap-3">
                 <a
                   href={`/profile/${currentUser.id}`}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-[#1E211E]/80 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-purple-50 transition-all duration-200 group"
                 >
-                  <div className="w-8 h-8 rounded-full bg-[#2ECC71] flex items-center justify-center text-white font-semibold">
-                    {currentUser.avatar ? (
-                      <img src={currentUser.avatar} alt={currentUser.name} className="w-full h-full rounded-full object-cover" />
-                    ) : (
-                      currentUser.name.charAt(0).toUpperCase()
-                    )}
-                  </div>
-                  <span className="text-sm font-medium text-[#F0F0F0] hidden sm:block">
+                  {currentUser.avatar ? (
+                    <img 
+                      src={currentUser.avatar} 
+                      alt={currentUser.name} 
+                      className="w-8 h-8 rounded-full ring-2 ring-purple-300 group-hover:ring-purple-500 transition-all duration-200 shadow-md group-hover:shadow-lg object-cover" 
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold ring-2 ring-purple-300 group-hover:ring-purple-500 transition-all duration-200 shadow-md group-hover:shadow-lg">
+                      {currentUser.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-gray-900 hidden sm:block group-hover:text-purple-600 transition-colors">
                     {currentUser.name}
                   </span>
                 </a>
                 <button
                   onClick={onLogout}
-                  className="px-4 py-2 text-[#F0F0F0]/70 hover:text-[#F0F0F0] hover:bg-[#1E211E]/80 rounded-lg transition-colors text-sm font-medium"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-purple-50 rounded-lg transition-colors text-sm font-medium"
                   title="Sign out"
                 >
                   Sign Out
@@ -103,7 +107,7 @@ export default function Header({
             ) : (
               <a
                 href="/login"
-                className="px-4 py-2 bg-[#2ECC71] text-white rounded-lg hover:bg-[#27AE60] transition-colors font-medium"
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
               >
                 Sign In
               </a>

@@ -29,9 +29,31 @@ export async function createVote(params: {
         changedMind: params.changedMind || false,
       }),
     })
-    return await response.json()
+    
+    // Check if response is OK and has content
+    if (!response.ok) {
+      const text = await response.text()
+      try {
+        const json = JSON.parse(text)
+        return { data: null, error: json.error || `HTTP ${response.status}` }
+      } catch {
+        return { data: null, error: text || `HTTP ${response.status}` }
+      }
+    }
+    
+    // Check if response has content
+    const text = await response.text()
+    if (!text || text.trim() === '') {
+      return { data: null, error: 'Empty response from server' }
+    }
+    
+    try {
+      return JSON.parse(text)
+    } catch (parseError: any) {
+      return { data: null, error: `Invalid JSON response: ${parseError.message}` }
+    }
   } catch (error: any) {
-    return { data: null, error: error.message }
+    return { data: null, error: error.message || 'Network error' }
   }
 }
 

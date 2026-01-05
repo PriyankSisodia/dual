@@ -118,11 +118,11 @@ export default function DualCard({
   return (
     <>
       <div
-        className={`bg-[#1E211E] rounded-xl shadow-xl hover:shadow-2xl overflow-hidden border border-[#1E211E]/50 mb-6 transition-all duration-300 hover:border-[#1E211E]/70 hover:-translate-y-1 ${className}`}
+        className={`bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden border border-purple-100 mb-6 transition-all duration-300 hover:border-purple-300 hover:-translate-y-1 ${className}`}
       >
         {/* Status Indicator for Unfinished Posts */}
         {isUnfinished && (
-          <div className="px-6 py-3 bg-gradient-to-r from-[#E67E22]/80 to-[#D35400] text-white text-center">
+          <div className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-center">
             <span className="inline-flex items-center gap-2 font-semibold text-sm animate-pulse">
               <span>⏳</span>
               <span>Waiting for Counter-Argument</span>
@@ -131,8 +131,8 @@ export default function DualCard({
         )}
 
         {topic && (
-          <div className="px-6 py-5 bg-gradient-to-r from-[#1E211E] to-[#1E211E]/90 border-b border-[#1E211E]/50 shadow-inner">
-            <h3 className="text-xl font-bold text-[#F0F0F0] drop-shadow-sm">{topic}</h3>
+          <div className="px-6 py-5 bg-gradient-to-r from-purple-50 to-purple-100 border-b border-purple-200 shadow-inner">
+            <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">{topic}</h3>
           </div>
         )}
 
@@ -140,48 +140,31 @@ export default function DualCard({
         <div className="flex flex-col md:flex-row min-h-[350px]">
           {/* Left Side */}
           <div
-            className={`flex-1 p-8 border-r-0 md:border-r border-b md:border-b-0 border-[#1E211E]/50 relative group ${
+            className={`flex-1 p-8 border-r-0 md:border-r border-b md:border-b-0 border-purple-200 relative group ${
               userVote === 'left'
-                ? 'bg-gradient-to-br from-[#2ECC71]/15 to-[#2ECC71]/5 ring-2 ring-[#2ECC71] ring-opacity-50 shadow-lg shadow-[#2ECC71]/20'
-                : 'bg-[#1E211E] hover:bg-[#1E211E]/95'
+                ? 'bg-gradient-to-br from-purple-50 to-purple-100 ring-2 ring-purple-400 ring-opacity-50 shadow-lg shadow-purple-200'
+                : 'bg-white hover:bg-purple-50'
             } transition-all duration-300`}
           >
             {/* Subtle glow effect on hover */}
             {userVote !== 'left' && (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#2ECC71]/0 to-[#2ECC71]/0 group-hover:from-[#2ECC71]/5 group-hover:to-transparent transition-all duration-300 pointer-events-none rounded-lg" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-50/0 to-purple-50/0 group-hover:from-purple-50 group-hover:to-transparent transition-all duration-300 pointer-events-none rounded-lg" />
             )}
             <div className="h-full flex flex-col">
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-base font-bold text-[#2ECC71] uppercase tracking-wide">
-                    Left Side
+                  <span className="text-base font-bold text-purple-600 uppercase tracking-wide">
+                    Side A
                   </span>
                   {leftSide && (
                     <div className="flex items-center gap-2">
-                      <a
-                        href={`/profile/${leftSide.authorId}`}
-                        className="flex items-center gap-1.5 text-xs text-[#F0F0F0]/70 hover:text-[#2ECC71] hover:underline transition-all duration-200 group/author"
-                      >
-                        {leftSide.avatar ? (
-                          <img
-                            src={leftSide.avatar}
-                            alt={leftSide.author}
-                            className="w-5 h-5 rounded-full ring-2 ring-[#2ECC71]/30 group-hover/author:ring-[#2ECC71] transition-all duration-200 shadow-md group-hover/author:shadow-lg group-hover/author:scale-110"
-                          />
-                        ) : (
-                          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#2ECC71] to-[#27AE60] flex items-center justify-center text-white text-xs font-semibold ring-2 ring-[#2ECC71]/30 group-hover/author:ring-[#2ECC71] transition-all duration-200 shadow-md group-hover/author:shadow-lg group-hover/author:scale-110">
-                            {leftSide.author.charAt(0).toUpperCase()}
-                          </div>
-                        )}
-                        @{leftSide.author}
-                      </a>
                       <button
                         onClick={() => handleChallenge('left')}
-                        className="p-1 hover:bg-[#2ECC71]/20 rounded transition-colors group"
+                        className="p-1 hover:bg-purple-100 rounded transition-colors group"
                         title="Challenge this side"
                       >
                         <svg
-                          className="w-4 h-4 text-[#2ECC71]/70 group-hover:text-[#27AE60] transition-colors"
+                          className="w-4 h-4 text-purple-500 group-hover:text-purple-600 transition-colors"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -194,12 +177,60 @@ export default function DualCard({
                           />
                         </svg>
                       </button>
+                      <a
+                        href={`/profile/${leftSide.authorId}`}
+                        className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-purple-600 hover:underline transition-all duration-200 group/author relative"
+                        title={leftSide.authorTitle && leftSide.authorCred !== undefined 
+                          ? `${leftSide.authorTitle} • ${leftSide.authorCred} cred`
+                          : leftSide.authorCred !== undefined 
+                          ? `${leftSide.authorCred} cred`
+                          : ''}
+                      >
+                        {leftSide.avatar ? (
+                          <img
+                            src={leftSide.avatar}
+                            alt={leftSide.author}
+                            className="w-5 h-5 rounded-full ring-2 ring-purple-300 group-hover/author:ring-purple-500 transition-all duration-200 shadow-md group-hover/author:shadow-lg group-hover/author:scale-110"
+                          />
+                        ) : (
+                          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold ring-2 ring-purple-300 group-hover/author:ring-purple-500 transition-all duration-200 shadow-md group-hover/author:shadow-lg group-hover/author:scale-110">
+                            {leftSide.author.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <span>@{leftSide.author}</span>
+                        
+                        {/* Hover tooltip showing title and cred */}
+                        {leftSide.authorTitle && leftSide.authorCred !== undefined && (
+                          <div className="absolute right-0 top-full mt-2 px-3 py-2 bg-white border border-purple-300 rounded-lg shadow-xl opacity-0 invisible group-hover/author:opacity-100 group-hover/author:visible transition-all duration-200 z-50 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <span 
+                                className="font-semibold text-sm"
+                                style={{ 
+                                  color: leftSide.authorCred >= 5000 ? '#9B59B6' :
+                                         leftSide.authorCred >= 2500 ? '#3498DB' :
+                                         leftSide.authorCred >= 1000 ? '#2ECC71' :
+                                         leftSide.authorCred >= 500 ? '#F39C12' :
+                                         leftSide.authorCred >= 100 ? '#E67E22' : '#95A5A6'
+                                }}
+                              >
+                                {leftSide.authorTitle}
+                              </span>
+                              <span className="text-gray-400">•</span>
+                              <span className="text-sm text-gray-700">
+                                {leftSide.authorCred} cred
+                              </span>
+                            </div>
+                            {/* Tooltip arrow */}
+                            <div className="absolute -top-1 right-4 w-2 h-2 bg-white border-r border-t border-purple-300 rotate-45"></div>
+                          </div>
+                        )}
+                      </a>
                     </div>
                   )}
                 </div>
                 {leftSide && leftSide.changedMindCount !== undefined && leftSide.changedMindCount > 0 && (
-                  <div className="flex items-center gap-1 text-xs text-[#F0F0F0]/60 mb-2">
-                    <span className="text-[#2ECC71]">💡</span>
+                  <div className="flex items-center gap-1 text-xs text-gray-600 mb-2">
+                    <span className="text-purple-600">💡</span>
                     <span>{leftSide.changedMindCount} changed their mind</span>
                   </div>
                 )}
@@ -208,25 +239,38 @@ export default function DualCard({
               {leftSide ? (
                 <>
                   <div className="flex-1 mb-4">
-                    <p className="text-[#F0F0F0] leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed">
                       {leftSide.content}
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 mt-auto">
-                    <button
-                      onClick={() => handleVote('left')}
-                      className={`px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-                        userVote === 'left'
-                          ? 'bg-gradient-to-r from-[#2ECC71] to-[#27AE60] text-white shadow-lg shadow-[#2ECC71]/30 hover:shadow-xl hover:shadow-[#2ECC71]/40'
-                          : 'bg-[#2ECC71]/20 text-[#2ECC71] hover:bg-[#2ECC71]/30 border border-[#2ECC71]/30 shadow-md hover:shadow-lg hover:border-[#2ECC71]/50'
-                      }`}
-                    >
-                      {userVote === 'left' ? '✓ Voted' : 'Vote Left'}
-                    </button>
+                  <div className="flex items-center gap-2 mt-auto">
+                    {/* Small Cred Button */}
+                    {leftSide.authorCred !== undefined && (
+                      <button
+                        onClick={() => handleVote('left')}
+                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 ${
+                          userVote === 'left'
+                            ? 'bg-purple-100 text-purple-600 border border-purple-300 shadow-sm'
+                            : 'bg-purple-50 text-gray-600 hover:bg-purple-100 border border-purple-200'
+                        }`}
+                        title="Vote for this side"
+                      >
+                        <svg
+                          className={`w-3.5 h-3.5 ${userVote === 'left' ? 'text-purple-600' : 'text-gray-400'}`}
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className={userVote === 'left' ? 'text-purple-600 font-semibold' : 'text-gray-700'}>
+                          {leftSide.authorCred}
+                        </span>
+                      </button>
+                    )}
                     {userVote === 'right' && !hasChangedMind && (
                       <button
                         onClick={() => handleChangeMind('left')}
-                        className="px-4 py-2 rounded-lg font-medium bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-900/40 text-purple-700 dark:text-purple-300 hover:from-purple-200 hover:to-purple-300 dark:hover:from-purple-900/50 dark:hover:to-purple-900/60 transition-all shadow-sm hover:shadow-md"
+                        className="px-3 py-1.5 rounded-md text-xs font-medium bg-gradient-to-r from-purple-900/30 to-purple-900/40 text-purple-300 hover:from-purple-900/50 hover:to-purple-900/60 transition-all shadow-sm hover:shadow-md"
                       >
                         Changed My Mind
                       </button>
@@ -236,10 +280,10 @@ export default function DualCard({
               ) : (
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
-                    <p className="text-[#F0F0F0]/60 mb-2">
-                      Waiting for Left Side...
+                    <p className="text-gray-600 mb-2">
+                      Waiting for Side A...
                     </p>
-                    <p className="text-sm text-[#F0F0F0]/50">
+                    <p className="text-sm text-gray-500">
                       Be the first to post the left perspective
                     </p>
                   </div>
@@ -248,50 +292,78 @@ export default function DualCard({
             </div>
           </div>
 
-          {/* Right Side */}
+          {/* Side B */}
           <div
             className={`flex-1 p-8 relative group ${
               userVote === 'right'
-                ? 'bg-gradient-to-br from-[#E67E22]/15 to-[#E67E22]/5 ring-2 ring-[#E67E22] ring-opacity-50 shadow-lg shadow-[#E67E22]/20'
-                : 'bg-[#1E211E] hover:bg-[#1E211E]/95'
+                ? 'bg-gradient-to-br from-purple-50 to-purple-100 ring-2 ring-purple-400 ring-opacity-50 shadow-lg shadow-purple-200'
+                : 'bg-white hover:bg-purple-50'
             } transition-all duration-300`}
           >
             {/* Subtle glow effect on hover */}
             {userVote !== 'right' && (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#E67E22]/0 to-[#E67E22]/0 group-hover:from-[#E67E22]/5 group-hover:to-transparent transition-all duration-300 pointer-events-none rounded-lg" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-50/0 to-purple-50/0 group-hover:from-purple-50 group-hover:to-transparent transition-all duration-300 pointer-events-none rounded-lg" />
             )}
             <div className="h-full flex flex-col">
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-base font-bold text-[#E67E22] uppercase tracking-wide">
-                    Right Side
-                  </span>
                   {rightSide && (
                     <div className="flex items-center gap-2">
                       <a
                         href={`/profile/${rightSide.authorId}`}
-                        className="flex items-center gap-1.5 text-xs text-[#F0F0F0]/70 hover:text-[#E67E22] hover:underline transition-all duration-200 group/author"
+                        className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-purple-600 hover:underline transition-all duration-200 group/author relative"
+                        title={rightSide.authorTitle && rightSide.authorCred !== undefined 
+                          ? `${rightSide.authorTitle} • ${rightSide.authorCred} cred`
+                          : rightSide.authorCred !== undefined 
+                          ? `${rightSide.authorCred} cred`
+                          : ''}
                       >
                         {rightSide.avatar ? (
                           <img
                             src={rightSide.avatar}
                             alt={rightSide.author}
-                            className="w-5 h-5 rounded-full ring-2 ring-[#E67E22]/30 group-hover/author:ring-[#E67E22] transition-all duration-200 shadow-md group-hover/author:shadow-lg group-hover/author:scale-110"
+                            className="w-5 h-5 rounded-full ring-2 ring-purple-300 group-hover/author:ring-purple-500 transition-all duration-200 shadow-md group-hover/author:shadow-lg group-hover/author:scale-110"
                           />
                         ) : (
-                          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#E67E22] to-[#D35400] flex items-center justify-center text-white text-xs font-semibold ring-2 ring-[#E67E22]/30 group-hover/author:ring-[#E67E22] transition-all duration-200 shadow-md group-hover/author:shadow-lg group-hover/author:scale-110">
+                          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold ring-2 ring-purple-300 group-hover/author:ring-purple-500 transition-all duration-200 shadow-md group-hover/author:shadow-lg group-hover/author:scale-110">
                             {rightSide.author.charAt(0).toUpperCase()}
                           </div>
                         )}
-                        @{rightSide.author}
+                        <span>@{rightSide.author}</span>
+                        
+                        {/* Hover tooltip showing title and cred */}
+                        {rightSide.authorTitle && rightSide.authorCred !== undefined && (
+                          <div className="absolute left-0 top-full mt-2 px-3 py-2 bg-white border border-purple-300 rounded-lg shadow-xl opacity-0 invisible group-hover/author:opacity-100 group-hover/author:visible transition-all duration-200 z-50 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <span 
+                                className="font-semibold text-sm"
+                                style={{ 
+                                  color: rightSide.authorCred >= 5000 ? '#7C3AED' :
+                                         rightSide.authorCred >= 2500 ? '#8B5CF6' :
+                                         rightSide.authorCred >= 1000 ? '#9333EA' :
+                                         rightSide.authorCred >= 500 ? '#A855F7' :
+                                         rightSide.authorCred >= 100 ? '#C084FC' : '#D8B4FE'
+                                }}
+                              >
+                                {rightSide.authorTitle}
+                              </span>
+                              <span className="text-gray-400">•</span>
+                              <span className="text-sm text-gray-700">
+                                {rightSide.authorCred} cred
+                              </span>
+                            </div>
+                            {/* Tooltip arrow */}
+                            <div className="absolute -top-1 left-4 w-2 h-2 bg-white border-l border-t border-purple-300 rotate-45"></div>
+                          </div>
+                        )}
                       </a>
                       <button
                         onClick={() => handleChallenge('right')}
-                        className="p-1 hover:bg-[#E67E22]/20 rounded transition-colors group"
+                        className="p-1 hover:bg-purple-100 rounded transition-colors group"
                         title="Challenge this side"
                       >
                         <svg
-                          className="w-4 h-4 text-[#E67E22]/70 group-hover:text-[#D35400] transition-colors"
+                          className="w-4 h-4 text-purple-500 group-hover:text-purple-600 transition-colors"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -306,10 +378,13 @@ export default function DualCard({
                       </button>
                     </div>
                   )}
+                  <span className="text-base font-bold text-purple-600 uppercase tracking-wide">
+                    Side B
+                  </span>
                 </div>
                 {rightSide && rightSide.changedMindCount !== undefined && rightSide.changedMindCount > 0 && (
-                  <div className="flex items-center gap-1 text-xs text-[#F0F0F0]/60 mb-2">
-                    <span className="text-[#E67E22]">💡</span>
+                  <div className="flex items-center gap-1 text-xs text-gray-600 mb-2">
+                    <span className="text-purple-600">💡</span>
                     <span>{rightSide.changedMindCount} changed their mind</span>
                   </div>
                 )}
@@ -318,25 +393,38 @@ export default function DualCard({
               {rightSide ? (
                 <>
                   <div className="flex-1 mb-4">
-                    <p className="text-[#F0F0F0] leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed">
                       {rightSide.content}
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 mt-auto">
-                    <button
-                      onClick={() => handleVote('right')}
-                      className={`px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-                        userVote === 'right'
-                          ? 'bg-gradient-to-r from-[#E67E22] to-[#D35400] text-white shadow-lg shadow-[#E67E22]/30 hover:shadow-xl hover:shadow-[#E67E22]/40'
-                          : 'bg-[#E67E22]/20 text-[#E67E22] hover:bg-[#E67E22]/30 border border-[#E67E22]/30 shadow-md hover:shadow-lg hover:border-[#E67E22]/50'
-                      }`}
-                    >
-                      {userVote === 'right' ? '✓ Voted' : 'Vote Right'}
-                    </button>
+                  <div className="flex items-center gap-2 mt-auto">
+                    {/* Small Cred Button */}
+                    {rightSide.authorCred !== undefined && (
+                      <button
+                        onClick={() => handleVote('right')}
+                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 ${
+                          userVote === 'right'
+                            ? 'bg-purple-100 text-purple-600 border border-purple-300 shadow-sm'
+                            : 'bg-purple-50 text-gray-600 hover:bg-purple-100 border border-purple-200'
+                        }`}
+                        title="Vote for this side"
+                      >
+                        <svg
+                          className={`w-3.5 h-3.5 ${userVote === 'right' ? 'text-purple-600' : 'text-gray-400'}`}
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className={userVote === 'right' ? 'text-purple-600 font-semibold' : 'text-gray-700'}>
+                          {rightSide.authorCred}
+                        </span>
+                      </button>
+                    )}
                     {userVote === 'left' && !hasChangedMind && (
                       <button
                         onClick={() => handleChangeMind('right')}
-                        className="px-4 py-2 rounded-lg font-medium bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-900/40 text-purple-700 dark:text-purple-300 hover:from-purple-200 hover:to-purple-300 dark:hover:from-purple-900/50 dark:hover:to-purple-900/60 transition-all shadow-sm hover:shadow-md"
+                        className="px-3 py-1.5 rounded-md text-xs font-medium bg-gradient-to-r from-purple-900/30 to-purple-900/40 text-purple-300 hover:from-purple-900/50 hover:to-purple-900/60 transition-all shadow-sm hover:shadow-md"
                       >
                         Changed My Mind
                       </button>
@@ -347,7 +435,7 @@ export default function DualCard({
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
                     <p className="text-[#F0F0F0]/60 mb-2">
-                      Waiting for Right Side...
+                      Waiting for Side B...
                     </p>
                     <p className="text-sm text-[#F0F0F0]/50">
                       Be the first to post the right perspective
@@ -360,64 +448,60 @@ export default function DualCard({
         </div>
 
         {/* Enhanced Leaning Bar */}
-        <div className="px-6 py-4 bg-gradient-to-b from-[#1E211E]/90 to-[#1E211E]/80 border-t border-[#1E211E]/50 shadow-inner">
+        <div className="px-6 py-4 bg-gradient-to-b from-purple-50 to-white border-t border-purple-200 shadow-inner">
+          {/* Percentage Display Above Bar */}
+          {totalVotes > 0 && (
+            <div className="flex items-center justify-between mb-2 px-1">
+              <span className="text-sm font-semibold text-purple-600">
+                {Math.round(leftPercentage)}%
+              </span>
+              <span className="text-xs text-gray-600">
+                {totalVotes} {totalVotes === 1 ? 'vote' : 'votes'}
+              </span>
+              <span className="text-sm font-semibold text-purple-600">
+                {Math.round(rightPercentage)}%
+              </span>
+            </div>
+          )}
           <div
-            className={`relative h-6 bg-[#1E211E]/60 rounded-full overflow-hidden cursor-pointer mb-2 shadow-inner ${
-              barPulse ? 'ring-2 ring-[#2ECC71] ring-opacity-50' : ''
+            className={`relative h-6 bg-purple-100 rounded-full overflow-hidden cursor-pointer mb-2 shadow-inner ${
+              barPulse ? 'ring-2 ring-purple-400 ring-opacity-50' : ''
             } transition-all duration-300 hover:shadow-lg`}
             onMouseEnter={() => setHoveredBar(true)}
             onMouseLeave={() => setHoveredBar(false)}
           >
             {/* Left Side */}
             <div
-              className={`absolute left-0 top-0 h-full bg-[#2ECC71] transition-all duration-500 ease-out flex items-center justify-start pl-2 ${
+              className={`absolute left-0 top-0 h-full bg-purple-500 transition-all duration-500 ease-out ${
                 barPulse ? 'animate-pulse' : ''
               }`}
               style={{ width: `${leftPercentage}%` }}
-            >
-              {leftPercentage > 15 && totalVotes > 0 && (
-                <span className="text-xs font-semibold text-white drop-shadow">
-                  {Math.round(leftPercentage)}%
-                </span>
-              )}
-            </div>
+            />
             {/* Bridge (Neutral Zone) */}
             {neutralPercentage > 5 && (
               <div
-                className="absolute top-0 h-full bg-[#F0F0F0]/30 transition-all duration-500 ease-out border-l-2 border-r-2 border-[#121412] flex items-center justify-center"
+                className="absolute top-0 h-full bg-purple-200 transition-all duration-500 ease-out border-l-2 border-r-2 border-purple-300"
                 style={{
                   left: `${leftPercentage}%`,
                   width: `${neutralPercentage}%`,
                 }}
-              >
-                {neutralPercentage > 10 && totalVotes > 0 && (
-                  <span className="text-xs font-semibold text-[#F0F0F0] drop-shadow">
-                    {Math.round(neutralPercentage)}%
-                  </span>
-                )}
-              </div>
+              />
             )}
-            {/* Right Side */}
+            {/* Side B */}
             <div
-              className="absolute right-0 top-0 h-full bg-[#E67E22] transition-all duration-500 ease-out flex items-center justify-end pr-2"
+              className="absolute right-0 top-0 h-full bg-purple-600 transition-all duration-500 ease-out"
               style={{ width: `${rightPercentage}%` }}
-            >
-              {rightPercentage > 15 && totalVotes > 0 && (
-                <span className="text-xs font-semibold text-white drop-shadow">
-                  {Math.round(rightPercentage)}%
-                </span>
-              )}
-            </div>
+            />
             {/* Divider Lines */}
             {leftPercentage > 0 && (
               <div
-                className="absolute top-0 h-full w-0.5 bg-[#121412] shadow-lg z-10 transition-all duration-500 ease-out"
+                className="absolute top-0 h-full w-0.5 bg-white shadow-lg z-10 transition-all duration-500 ease-out"
                 style={{ left: `${leftPercentage}%` }}
               />
             )}
             {neutralPercentage > 0 && (
               <div
-                className="absolute top-0 h-full w-0.5 bg-[#121412] shadow-lg z-10 transition-all duration-500 ease-out"
+                className="absolute top-0 h-full w-0.5 bg-white shadow-lg z-10 transition-all duration-500 ease-out"
                 style={{ left: `${leftPercentage + neutralPercentage}%` }}
               />
             )}
@@ -425,27 +509,27 @@ export default function DualCard({
 
           {/* Hover Tooltip */}
           {hoveredBar && breakdown && totalVotes > 0 && (
-            <div className="mt-2 p-3 bg-[#1E211E] rounded-lg border border-[#1E211E]/50 shadow-2xl backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="mt-2 p-3 bg-white rounded-lg border border-purple-200 shadow-2xl backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div>
-                  <p className="font-semibold text-[#2ECC71] mb-1">
-                    Left Side Breakdown
+                  <p className="font-semibold text-purple-600 mb-1">
+                    Side A Breakdown
                   </p>
-                  <p className="text-[#F0F0F0]/70">
+                  <p className="text-gray-600">
                     {breakdown.left.logical}% find this more logical
                   </p>
-                  <p className="text-[#F0F0F0]/70">
+                  <p className="text-gray-600">
                     {breakdown.left.emotional}% find this more persuasive
                   </p>
                 </div>
                 <div>
-                  <p className="font-semibold text-[#E67E22] mb-1">
-                    Right Side Breakdown
+                  <p className="font-semibold text-purple-600 mb-1">
+                    Side B Breakdown
                   </p>
-                  <p className="text-[#F0F0F0]/70">
+                  <p className="text-gray-600">
                     {breakdown.right.logical}% find this more logical
                   </p>
-                  <p className="text-[#F0F0F0]/70">
+                  <p className="text-gray-600">
                     {breakdown.right.emotional}% find this more persuasive
                   </p>
                 </div>
@@ -460,8 +544,8 @@ export default function DualCard({
                 onClick={() => handleVote('neutral')}
                 className={`px-3 py-1 rounded text-xs font-medium transition-all ${
                   userVote === 'neutral'
-                    ? 'bg-[#F0F0F0]/20 text-[#F0F0F0]'
-                    : 'text-[#F0F0F0]/60 hover:text-[#F0F0F0]/80'
+                    ? 'bg-purple-100 text-purple-700'
+                    : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
                 {userVote === 'neutral' ? '✓ Both Have Merit' : 'Both Have Merit'}
@@ -471,15 +555,15 @@ export default function DualCard({
         </div>
 
         {/* Action Toolbar */}
-        <div className="px-6 py-3 bg-gradient-to-b from-[#1E211E]/80 to-[#1E211E]/90 border-t border-[#1E211E]/50 flex items-center justify-between shadow-inner">
-          {/* Left Side Actions */}
+        <div className="px-6 py-3 bg-gradient-to-b from-purple-50 to-white border-t border-purple-200 flex items-center justify-between shadow-inner">
+          {/* Side A Actions */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setShowArenaSection(!showArenaSection)}
               className={`flex items-center gap-1.5 text-sm transition-all duration-200 px-2 py-1 rounded-lg ${
                 showArenaSection
-                  ? 'text-[#2ECC71] bg-[#2ECC71]/10 shadow-md'
-                  : 'text-[#F0F0F0]/70 hover:text-[#F0F0F0] hover:bg-[#1E211E]/50'
+                  ? 'text-purple-600 bg-purple-100 shadow-md'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-purple-50'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -494,7 +578,7 @@ export default function DualCard({
             </button>
             <button
               onClick={onShare}
-              className="flex items-center gap-1.5 text-sm text-[#F0F0F0]/70 hover:text-[#F0F0F0] transition-all duration-200 px-2 py-1 rounded-lg hover:bg-[#1E211E]/50"
+              className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition-all duration-200 px-2 py-1 rounded-lg hover:bg-purple-50"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -509,8 +593,8 @@ export default function DualCard({
               onClick={onBookmark}
               className={`flex items-center gap-1.5 text-sm transition-all duration-200 px-2 py-1 rounded-lg ${
                 isBookmarked
-                  ? 'text-[#F39C12] bg-[#F39C12]/10 shadow-md'
-                  : 'text-[#F0F0F0]/70 hover:text-[#F0F0F0] hover:bg-[#1E211E]/50'
+                  ? 'text-purple-600 bg-purple-100 shadow-md'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-purple-50'
               }`}
             >
               <svg className="w-4 h-4" fill={isBookmarked ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
@@ -524,7 +608,7 @@ export default function DualCard({
             </button>
           </div>
 
-          {/* Right Side - Challenge Button */}
+          {/* Side B - Challenge Button */}
           <button
             onClick={() => {
               // Show challenge options
@@ -533,7 +617,7 @@ export default function DualCard({
                 handleChallenge('left')
               }
             }}
-            className="flex items-center gap-1.5 text-sm text-[#F0F0F0]/70 hover:text-[#F0F0F0] transition-all duration-200 px-2 py-1 rounded-lg hover:bg-[#1E211E]/50 hover:shadow-md"
+            className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition-all duration-200 px-2 py-1 rounded-lg hover:bg-purple-50 hover:shadow-md"
             title="Challenge this dual"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

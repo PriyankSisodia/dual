@@ -10,7 +10,8 @@ const getUserData = (userId: string) => {
   const users: Record<string, any> = {
     'user-1': {
       name: 'Sarah Chen',
-      persuasionScore: 450,
+      cred: 2450,
+      avatar: undefined,
       topics: ['Technology', 'Remote Work', 'Productivity'],
       followerCount: 1234,
       followingCount: 567,
@@ -18,7 +19,8 @@ const getUserData = (userId: string) => {
     },
     'user-2': {
       name: 'Michael Torres',
-      persuasionScore: 320,
+      cred: 850,
+      avatar: undefined,
       topics: ['Business', 'Team Culture', 'Collaboration'],
       followerCount: 890,
       followingCount: 234,
@@ -28,7 +30,8 @@ const getUserData = (userId: string) => {
 
   return users[userId] || {
     name: 'Unknown User',
-    persuasionScore: 0,
+    cred: 0,
+    avatar: undefined,
     topics: [],
     followerCount: 0,
     followingCount: 0,
@@ -48,7 +51,7 @@ const getUserDualCards = (userId: string) => {
           author: 'Sarah Chen',
           authorId: 'user-1',
           votes: 42,
-          persuasionPoints: 150,
+          upvotes: 150,
           createdAt: new Date(),
         },
         rightSide: {
@@ -57,7 +60,7 @@ const getUserDualCards = (userId: string) => {
           author: 'Michael Torres',
           authorId: 'user-2',
           votes: 38,
-          persuasionPoints: 120,
+          upvotes: 120,
           createdAt: new Date(),
         },
         topic: 'Remote Work vs. In-Office Work',
@@ -80,7 +83,8 @@ export default function ProfilePage({ params }: { params: Promise<{ userId: stri
         <Profile
           userId={userId}
           name={userData.name}
-          persuasionScore={userData.persuasionScore}
+          avatar={userData.avatar}
+          cred={userData.cred}
           topics={userData.topics}
           followerCount={userData.followerCount}
           followingCount={userData.followingCount}

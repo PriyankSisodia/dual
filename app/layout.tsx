@@ -13,8 +13,8 @@ export default function RootLayout({
   children: ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className="dark">{children}</body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   )
 }

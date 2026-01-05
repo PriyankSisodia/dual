@@ -4,8 +4,10 @@ export interface DualSide {
   author: string
   authorId: string
   avatar?: string
+  authorCred?: number
+  authorTitle?: string
   votes: number
-  persuasionPoints: number
+  upvotes: number
   changedMindCount?: number
   createdAt: Date | string
   challengeCount?: number

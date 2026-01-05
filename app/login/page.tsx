@@ -83,25 +83,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121412] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#F5F3FF] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#F0F0F0] mb-2">DUAL</h1>
-          <p className="text-[#F0F0F0]/70">Welcome back. Let's continue the conversation.</p>
+          <h1 className="text-4xl font-bold text-purple-600 mb-2">DUAL</h1>
+          <p className="text-gray-600">Welcome back. Let's continue the conversation.</p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-[#1E211E] rounded-xl p-8 border border-[#1E211E]/50 shadow-lg">
+        <div className="bg-white rounded-xl p-8 border border-purple-200 shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <div>
-              <label htmlFor="emailOrUsername" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+              <label htmlFor="emailOrUsername" className="block text-sm font-medium text-gray-900 mb-2">
                 Email or Username
               </label>
               <input
@@ -110,13 +110,13 @@ export default function LoginPage() {
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#121412] border border-[#1E211E]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#F0F0F0] placeholder-[#F0F0F0]/50"
+                className="w-full px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="you@example.com or username"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
                 Password
               </label>
               <input
@@ -125,7 +125,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#121412] border border-[#1E211E]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2ECC71] focus:border-transparent text-[#F0F0F0] placeholder-[#F0F0F0]/50"
+                className="w-full px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="••••••••"
               />
             </div>
@@ -133,7 +133,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-3 bg-[#2ECC71] text-white rounded-lg hover:bg-[#27AE60] transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
@@ -141,9 +141,9 @@ export default function LoginPage() {
 
           {/* Sign Up Link */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-[#F0F0F0]/70">
+            <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <Link href="/signup" className="text-[#2ECC71] hover:text-[#27AE60] font-medium">
+              <Link href="/signup" className="text-purple-600 hover:text-purple-700 font-medium">
                 Sign up
               </Link>
             </p>

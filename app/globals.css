@@ -4,13 +4,13 @@
 
 @layer base {
   html {
-    background-color: #121412;
-    color: #F0F0F0;
+    background-color: #F5F3FF;
+    color: #1F1F1F;
   }
   
   body {
-    background-color: #121412;
-    color: #F0F0F0;
+    background-color: #F5F3FF;
+    color: #1F1F1F;
   }
 }
 
@@ -40,12 +40,12 @@
   }
   
   .scrollbar-thumb-\[#1E211E\]\/50::-webkit-scrollbar-thumb {
-    background: rgba(30, 33, 30, 0.5);
+    background: rgba(139, 92, 246, 0.5);
     border-radius: 3px;
   }
   
   .scrollbar-thumb-\[#1E211E\]\/50::-webkit-scrollbar-thumb:hover {
-    background: rgba(30, 33, 30, 0.7);
+    background: rgba(139, 92, 246, 0.7);
   }
   
   .scrollbar-track-transparent::-webkit-scrollbar-track {

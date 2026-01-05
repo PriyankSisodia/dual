@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 export interface Notification {
   id: string
-  type: 'challenge' | 'changed_mind' | 'half_post_completed' | 'new_follower'
+  type: 'challenge' | 'changed_mind' | 'half_post_completed' | 'new_follower' | 'vote' | 'comment' | 'new_dual'
   message: string
   userId?: string
   userName?: string
@@ -37,6 +37,12 @@ export default function Notifications({
         return '✅'
       case 'new_follower':
         return '👤'
+      case 'vote':
+        return '🗳️'
+      case 'comment':
+        return '💬'
+      case 'new_dual':
+        return '✨'
       default:
         return '🔔'
     }
@@ -45,15 +51,21 @@ export default function Notifications({
   const getNotificationColor = (type: Notification['type']) => {
     switch (type) {
       case 'challenge':
-        return 'text-[#E67E22]'
+        return 'text-purple-600'
       case 'changed_mind':
-        return 'text-[#2ECC71]'
+        return 'text-purple-600'
       case 'half_post_completed':
-        return 'text-[#2ECC71]'
+        return 'text-purple-600'
       case 'new_follower':
-        return 'text-[#2ECC71]'
+        return 'text-purple-600'
+      case 'vote':
+        return 'text-gray-900'
+      case 'comment':
+        return 'text-purple-600'
+      case 'new_dual':
+        return 'text-purple-600'
       default:
-        return 'text-[#F0F0F0]/70'
+        return 'text-gray-600'
     }
   }
 
@@ -61,7 +73,7 @@ export default function Notifications({
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-[#F0F0F0]/80 hover:text-[#F0F0F0] transition-colors"
+        className="relative p-2 text-gray-600 hover:text-gray-900 transition-colors"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -72,7 +84,7 @@ export default function Notifications({
           />
         </svg>
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-[#E67E22] text-white text-xs flex items-center justify-center font-bold">
+          <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center font-bold">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -84,19 +96,19 @@ export default function Notifications({
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-80 bg-[#1E211E] rounded-xl shadow-2xl border border-[#1E211E]/50 z-50 max-h-96 overflow-y-auto">
-            <div className="p-4 border-b border-[#1E211E]/50 flex items-center justify-between">
-              <h3 className="font-semibold text-[#F0F0F0]">Notifications</h3>
+          <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-purple-200 z-50 max-h-96 overflow-y-auto">
+            <div className="p-4 border-b border-purple-200 flex items-center justify-between">
+              <h3 className="font-semibold text-gray-900">Notifications</h3>
               {notifications.length > 0 && (
                 <button
                   onClick={onClearAll}
-                  className="text-xs text-[#2ECC71] hover:underline"
+                  className="text-xs text-purple-600 hover:underline"
                 >
                   Clear all
                 </button>
               )}
             </div>
-            <div className="divide-y divide-[#1E211E]/50">
+            <div className="divide-y divide-purple-200">
               {notifications.length > 0 ? (
                 notifications.map((notification) => (
                   <div
@@ -106,8 +118,8 @@ export default function Notifications({
                         onMarkAsRead?.(notification.id)
                       }
                     }}
-                    className={`p-4 hover:bg-[#1E211E]/80 cursor-pointer transition-colors ${
-                      !notification.read ? 'bg-[#2ECC71]/10' : ''
+                    className={`p-4 hover:bg-purple-50 cursor-pointer transition-colors ${
+                      !notification.read ? 'bg-purple-50' : ''
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -120,18 +132,18 @@ export default function Notifications({
                         >
                           {notification.message}
                         </p>
-                        <p className="text-xs text-[#F0F0F0]/60 mt-1">
+                        <p className="text-xs text-gray-500 mt-1">
                           {new Date(notification.timestamp).toLocaleString()}
                         </p>
                       </div>
                       {!notification.read && (
-                        <div className="w-2 h-2 rounded-full bg-[#2ECC71] flex-shrink-0 mt-1" />
+                        <div className="w-2 h-2 rounded-full bg-purple-600 flex-shrink-0 mt-1" />
                       )}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="p-8 text-center text-[#F0F0F0]/70">
+                <div className="p-8 text-center text-gray-600">
                   <p>No notifications yet</p>
                 </div>
               )}
